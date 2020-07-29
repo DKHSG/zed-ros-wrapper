@@ -683,8 +683,11 @@ private:
     bool mObjDetVehicles = true;
     std::vector<sl::OBJECT_CLASS> mObjDetFilter;
 
+    bool mkeyPointsEnabled = false;
+
     ros::Publisher mPubObjDet;
     ros::Publisher mPubObjDetViz;
+    ros::Publisher mPubKeypoints;
 }; // class ZEDROSWrapperNodelet
 } // namespace
 
