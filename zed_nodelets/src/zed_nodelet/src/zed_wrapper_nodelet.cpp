@@ -4046,7 +4046,7 @@ void ZEDWrapperNodelet::detectObjects(bool publishObj, bool publishViz, ros::Tim
     //Add Data to keypointMsg
     //Create multiarray message to store data
     //num_objects, num_keypoints, keypoint_shape = datum.poseKeypoints.shape
-
+    std::cout << "step1" << std::endl;
     if(mkeyPointsEnabled)
     {
     zed_interfaces::ObjectsKeypointsStamped keypointsMsg;
@@ -4057,10 +4057,10 @@ void ZEDWrapperNodelet::detectObjects(bool publishObj, bool publishViz, ros::Tim
     int obejectStepsize = num_keypoints * 3;
     //Keypoint = x y confidence
 
+std::cout << "step2" << std::endl;
 
 
-
-    multiarray.data.resize(objects.object_list.size() * objects.object_list[0].keypoint.size() * 3);  //datum.poseKeypoints.reshape([num_objects * num_keypoints * keypoint_shape])
+    multiarray.data.resize(objects.object_list.size() * 18 * 3);  //datum.poseKeypoints.reshape([num_objects * num_keypoints * keypoint_shape])
             // This is almost always zero. There is no empty padding at the start of your data
     multiarray.layout.data_offset = 0;
             //create three dimensions in the dim array
@@ -4081,7 +4081,7 @@ void ZEDWrapperNodelet::detectObjects(bool publishObj, bool publishViz, ros::Tim
             multiarray.layout.dim[2].stride = 3;
 
             multiarray.data.resize(num_objects * num_keypoints * 3);
-
+std::cout << "step3" << std::endl;
             //Copy data to array
             for(int i = 0; i < num_objects; i++)
             {
@@ -4100,12 +4100,12 @@ void ZEDWrapperNodelet::detectObjects(bool publishObj, bool publishViz, ros::Tim
                 }
               }
             }
-
+std::cout << "step4" << std::endl;
       keypointsMsg.multiarray =  multiarray;
       keypointsMsg.header = header;
       //publish Keypoints
       mPubKeypoints.publish(keypointsMsg);
-
+std::cout << "step5" << std::endl;
     }
 
 

@@ -21,4 +21,4 @@ object_detection:
     object_tracking_enabled:    true            # Enable/disable the tracking of the detected objects
     people_detection:           true            # Enable/disable the detection of persons
     vehicle_detection:          false           # Enable/disable the detection of vehicles
-    keyPoints_enabled:          true            # Enable/disable Keypoint detection and output / [od_enabled must be true!!]
+    keyPoints_enabled:          true           # Enable/disable Keypoint detection and output / [od_enabled must be true!!]
