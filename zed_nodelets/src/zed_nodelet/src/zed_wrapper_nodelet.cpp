@@ -4089,15 +4089,19 @@ void ZEDWrapperNodelet::detectObjects(bool publishObj, bool publishViz, ros::Tim
       {
         for(int j = 0; j < 18; j++)
         {
-          multiarray.data[i * obejectStepsize + j * 3] = objects.object_list[i].keypoint_2d[j].x;
-          multiarray.data[i * obejectStepsize + j * 3 + 1] = objects.object_list[i].keypoint_2d[j].y;
+
 
           if(objects.object_list[i].keypoint_2d[j].x < 0.0f)
           {
+            //Set everything to zero if point not valid
+            multiarray.data[i * obejectStepsize + j * 3] = 0.0;
+            multiarray.data[i * obejectStepsize + j * 3 + 1] = 0.0;
             multiarray.data[i * obejectStepsize + j * 3 + 2] = 0.0;
           }
           else
           {
+            multiarray.data[i * obejectStepsize + j * 3] = objects.object_list[i].keypoint_2d[j].x;
+            multiarray.data[i * obejectStepsize + j * 3 + 1] = objects.object_list[i].keypoint_2d[j].y;
             multiarray.data[i * obejectStepsize + j * 3 + 2] = objects.object_list[i].confidence;
           }
         }
@@ -4105,6 +4109,7 @@ void ZEDWrapperNodelet::detectObjects(bool publishObj, bool publishViz, ros::Tim
 
       keypointsMsg.multiarray =  multiarray;
       keypointsMsg.header = header;
+      keypointsMsg.header.frame_id = "zed2_left_camera_optical_frame";
       //publish Keypoints
       mPubKeypoints.publish(keypointsMsg);
 
