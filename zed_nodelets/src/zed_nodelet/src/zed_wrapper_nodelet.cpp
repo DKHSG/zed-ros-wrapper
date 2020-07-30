@@ -4046,66 +4046,68 @@ void ZEDWrapperNodelet::detectObjects(bool publishObj, bool publishViz, ros::Tim
     //Add Data to keypointMsg
     //Create multiarray message to store data
     //num_objects, num_keypoints, keypoint_shape = datum.poseKeypoints.shape
-    std::cout << "step1" << std::endl;
     if(mkeyPointsEnabled)
     {
-    zed_interfaces::ObjectsKeypointsStamped keypointsMsg;
+      zed_interfaces::ObjectsKeypointsStamped keypointsMsg;
 
-    std_msgs::Float32MultiArray multiarray;
-    int num_objects = objects.object_list.size();
-    int num_keypoints = 18;
-    int obejectStepsize = num_keypoints * 3;
-    //Keypoint = x y confidence
-
-std::cout << "step2" << std::endl;
+      std_msgs::Float32MultiArray multiarray;
+      int num_objects = objects.object_list.size();
+      int num_keypoints = 18;
+      int obejectStepsize = num_keypoints * 3;
+      //Keypoint = x y confidence
 
 
-    multiarray.data.resize(objects.object_list.size() * 18 * 3);  //datum.poseKeypoints.reshape([num_objects * num_keypoints * keypoint_shape])
-            // This is almost always zero. There is no empty padding at the start of your data
-    multiarray.layout.data_offset = 0;
-            //create three dimensions in the dim array
-    multiarray.layout.dim.push_back(std_msgs::MultiArrayDimension());
-    multiarray.layout.dim.push_back(std_msgs::MultiArrayDimension());
-    multiarray.layout.dim.push_back(std_msgs::MultiArrayDimension());   // = [MultiArrayDimension(), MultiArrayDimension(), MultiArrayDimension()]
-            //dim[0] contains the number of detected objects
-            multiarray.layout.dim[0].label = "num_objects";
-            multiarray.layout.dim[0].size = num_objects;
-            multiarray.layout.dim[0].stride = num_objects * num_keypoints * 3;
-            //dim[1] contains the keypoints per detected object
-            multiarray.layout.dim[1].label = "num_keypoints";
-            multiarray.layout.dim[1].size = num_keypoints;
-            multiarray.layout.dim[1].stride = num_keypoints * 3;
-            //dim[2] contains the data of a single keypoint
-            multiarray.layout.dim[2].label = "keypoint_data";
-            multiarray.layout.dim[2].size = 3;
-            multiarray.layout.dim[2].stride = 3;
+      multiarray.data.resize(objects.object_list.size() * 18 * 3);  //datum.poseKeypoints.reshape([num_objects * num_keypoints * keypoint_shape])
 
-            multiarray.data.resize(num_objects * num_keypoints * 3);
-std::cout << "step3" << std::endl;
-            //Copy data to array
-            for(int i = 0; i < num_objects; i++)
-            {
-              for(int j = 0; j < 18; j++)
-              {
-                multiarray.data[i * obejectStepsize + j * 3] = objects.object_list[i].keypoint_2d[j].x;
-                multiarray.data[i * obejectStepsize + j * 3 + 1] = objects.object_list[i].keypoint_2d[j].y;
+      // This is almost always zero. There is no empty padding at the start of your data
+      multiarray.layout.data_offset = 0;
 
-                if(objects.object_list[i].keypoint_2d[j].x < 0.0f)
-                {
-                  multiarray.data[i * obejectStepsize + j * 3 + 2] = 0.0;
-                }
-                else
-                {
-                  multiarray.data[i * obejectStepsize + j * 3 + 2] = objects.object_list[i].confidence;
-                }
-              }
-            }
-std::cout << "step4" << std::endl;
+      //create three dimensions in the dim array
+      multiarray.layout.dim.push_back(std_msgs::MultiArrayDimension());
+      multiarray.layout.dim.push_back(std_msgs::MultiArrayDimension());
+      multiarray.layout.dim.push_back(std_msgs::MultiArrayDimension());   // = [MultiArrayDimension(), MultiArrayDimension(), MultiArrayDimension()]
+
+      //dim[0] contains the number of detected objects
+      multiarray.layout.dim[0].label = "num_objects";
+      multiarray.layout.dim[0].size = num_objects;
+      multiarray.layout.dim[0].stride = num_objects * num_keypoints * 3;
+
+      //dim[1] contains the keypoints per detected object
+      multiarray.layout.dim[1].label = "num_keypoints";
+      multiarray.layout.dim[1].size = num_keypoints;
+      multiarray.layout.dim[1].stride = num_keypoints * 3;
+
+      //dim[2] contains the data of a single keypoint
+      multiarray.layout.dim[2].label = "keypoint_data";
+      multiarray.layout.dim[2].size = 3;
+      multiarray.layout.dim[2].stride = 3;
+
+      multiarray.data.resize(num_objects * num_keypoints * 3);
+
+      //Copy data to array
+      for(int i = 0; i < num_objects; i++)
+      {
+        for(int j = 0; j < 18; j++)
+        {
+          multiarray.data[i * obejectStepsize + j * 3] = objects.object_list[i].keypoint_2d[j].x;
+          multiarray.data[i * obejectStepsize + j * 3 + 1] = objects.object_list[i].keypoint_2d[j].y;
+
+          if(objects.object_list[i].keypoint_2d[j].x < 0.0f)
+          {
+            multiarray.data[i * obejectStepsize + j * 3 + 2] = 0.0;
+          }
+          else
+          {
+            multiarray.data[i * obejectStepsize + j * 3 + 2] = objects.object_list[i].confidence;
+          }
+        }
+      }
+
       keypointsMsg.multiarray =  multiarray;
       keypointsMsg.header = header;
       //publish Keypoints
       mPubKeypoints.publish(keypointsMsg);
-std::cout << "step5" << std::endl;
+
     }
 
 
