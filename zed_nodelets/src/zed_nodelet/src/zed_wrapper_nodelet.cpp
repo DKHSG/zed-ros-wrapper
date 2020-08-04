@@ -4102,7 +4102,7 @@ void ZEDWrapperNodelet::detectObjects(bool publishObj, bool publishViz, ros::Tim
           {
             multiarray.data[i * obejectStepsize + j * 3] = objects.object_list[i].keypoint_2d[j].x;
             multiarray.data[i * obejectStepsize + j * 3 + 1] = objects.object_list[i].keypoint_2d[j].y;
-            multiarray.data[i * obejectStepsize + j * 3 + 2] = objects.object_list[i].confidence;
+            multiarray.data[i * obejectStepsize + j * 3 + 2] = objects.object_list[i].confidence/100.0f;  //Range 0.0-1.0 with "/100.0f"
           }
         }
       }
