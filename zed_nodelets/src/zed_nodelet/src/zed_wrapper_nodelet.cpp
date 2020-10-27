@@ -4175,7 +4175,7 @@ void ZEDWrapperNodelet::detectObjects(bool publishObj, bool publishViz, ros::Tim
     old_time = now;
     // <---- Diagnostic information update
 
-    NODELET_DEBUG_STREAM("Detected " << objects.object_list.size() << " objects");
+    //NODELET_DEBUG_STREAM("Detected " << objects.object_list.size() << " objects");
 
     size_t objCount = objects.object_list.size();
 
